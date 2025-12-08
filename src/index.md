@@ -8,6 +8,13 @@ footer: false
 pager: false
 ---
 
+```js
+const messaged = (event) => iframe.height = event.data.height;
+addEventListener("message", messaged);
+invalidation.then(() => removeEventListener("message", messaged));
+```
+
+
 <style>
 
 div.card {

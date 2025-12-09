@@ -8,7 +8,11 @@ footer: false
 pager: false
 ---
 
-
+<script>
+const observer = new ResizeObserver(([entry]) => parent.postMessage({height: entry.target.offsetHeight}, "*"));
+observer.observe(document.documentElement);
+invalidation.then(() => observer.disconnect());
+</script>
 
 
 <style>
@@ -57,7 +61,6 @@ const overlapData = await FileAttachment("data/identity_overlap.csv").csv({typed
 const primaryOptions = overlapData.map(d => d.primary_identity)
   .filter((v, i, a) => a.indexOf(v) === i) // Remove duplicates
   .sort(); // Sort alphabetically
-console.log(primaryOptions);
 // The 'view' function displays the input and exposes the user's choice 
 // as the variable 'selectedPrimary' for the rest of the page to use.
 

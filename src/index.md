@@ -31,6 +31,14 @@ div.card {
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
+p, table, figure, figcaption, h1, h2, h3, h4, h5, h6, .katex-display {
+    max-width: 100%
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
 </style>
 
 

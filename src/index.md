@@ -1,5 +1,5 @@
 ---
-title: 2026 OPEN Community Survey
+title: 2025 OPEN Community Survey Report
 theme: air
 toc: false
 sidebar: false
@@ -17,34 +17,194 @@ invalidation.then(() => observer.disconnect());
 
 <style>
 
+:root {
+  --primary-color: #5f4d8d;
+  --accent-color: #f57c00;
+  --text-color: #333;
+  --bg-color: #f9f9f9;
+}
+
+/* Ensure content uses full width */
+.observablehq {
+    max-width: 100% !important;
+    padding: 0 1rem;
+}
+
 div.card {
   /* The Magic */
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(9px);
-  -webkit-backdrop-filter: blur(9px);
+  background: rgba(255, 255, 255, 0.4); /* Higher opacity for better text readability */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   
   /* The Border simulates the glass edge */
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-top: 1px solid rgba(255, 255, 255, 0.3); /* Catching light */
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.8);
   
-  border-radius: 24px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05); /* Softer shadow */
+  padding: 2.5rem; 
+  margin-bottom: 3rem;
+  max-width: 1200px; /* Constrain max width for readability on large screens */
+  margin-left: auto;
+  margin-right: auto;
 }
 
-p, table, figure, figcaption, h1, h2, h3, h4, h5, h6, .katex-display {
-    max-width: 100%
+/* Typography Overrides */
+h1, h2, h3 {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0; /* Reset margins */
+    padding: 0;
+}
+h1 { 
+    font-size: 2.5rem; 
+    margin-bottom: 2rem; 
+    text-align: center; 
+}
+h2 { 
+    font-size: 1.8rem; 
+    margin-top: 3rem; 
+    margin-bottom: 1.5rem; 
+    border-bottom: 2px solid rgba(95, 77, 141, 0.1); 
+    padding-bottom: 0.5rem;
+    text-align: left; /* Consistent alignment */
+}
+h3 { 
+    font-size: 1.4rem; 
+    margin-bottom: 1rem;
+    text-align: left;
+}
+p, li { 
+    font-size: 1.1rem; 
+    line-height: 1.6; 
+    color: #4a4a4a;
+}
+li {
+    margin-bottom: 0.5rem;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
+/* Fix "gutter" issue by centering and constraining text width to matching card width container */
+main {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+}
+
+/* Force standard elements to expand */
+p, ul, ol, li {
+    max-width: 100% !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Button Styling */
+.button-link {
+    display: inline-block;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white !important; /* Force white text */
+    text-decoration: none !important;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.button-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    color: white !important;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+    div.card { 
+        padding: 1.5rem; 
+        border-radius: 16px;
+    }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    .observablehq { padding: 0 0.5rem; }
 }
 
 </style>
 
 
 ```js
-import * as Inputs from "@observablehq/inputs"
+import * as Inputs from "@observablehq/inputs";
+
+// Global Responsive Check
+const isMobile = width < 600;
 ```
+
+
+# 2025 OPEN Community Survey Report
+
+Multiamory was proud to be one of the primary sponsors of the **2025 OPEN Community Survey**. Conducted in partnership with Dr. Amy Moors of Chapman University (IRB #26-13), this year's survey represents the **largest dataset of non-monogamous experiences compiled to date**, with 5,885 respondents from 65 countries.
+
+This report offers a look into the lives, experiences, and challenges of non-monogamous individuals. Below are some interactive visualizations and key findings.
+
+<div class="card" style="text-align: center;">
+
+### Read the Full Report
+
+For the complete analysis, data breakdowns, and detailed methodology, please visit the official report on the OPEN website.
+
+<a href="https://www.open-love.org/blog/2025-community-survey-report" class="button-link" target="_blank">View Main Report</a>
+
+</div>
+
+
+```js
+const demographics = [
+  {category: "LGBTQ+", value: 76, fill: "#5f4d8d"},
+  {category: "Heterosexual", value: 24, fill: "#eee"}
+];
+```
+
+<div class="card">
+
+### LGBTQ+ Overlap
+
+Significant overlap continues to exist between non-monogamy and LGBTQ+ identities:
+
+- Only **24%** identified as heterosexual/straight.
+- **71%** identified as cisgender.
+
+```js
+// 100% Stacked Bar
+Plot.plot({
+  width: width,
+  height: 120,
+  style: { fontSize: "14px", fontFamily: "Inter, sans-serif" },
+  x: { axis: null, domain: [0, 100] },
+  y: { axis: null },
+  color: {
+    domain: ["LGBTQ+", "Heterosexual"],
+    range: ["#5f4d8d", "#e0e0e0"]
+  },
+  marks: [
+    Plot.barX(demographics, Plot.stackX({
+      x: "value",
+      fill: "category",
+      title: d => `${d.category}: ${d.value}%`,
+      inset: 0.5,
+      rx: 8 // Rounded corners for modern look
+    })),
+    // Labels centered on the segments
+    Plot.text(demographics, Plot.stackX({
+      x: "value",
+      text: d => `${d.category}\n${d.value}%`,
+      z: "category",
+      fill: d => d.category === "LGBTQ+" ? "white" : "#333",
+      fontWeight: "bold",
+      fontFamily: "Inter, sans-serif"
+    }))
+  ]
+})
+```
+
+</div>
 
 
 # Relationship Identity Overlap
@@ -52,38 +212,29 @@ import * as Inputs from "@observablehq/inputs"
 How do different non-monogamous identities intersect? 
 Participants were able to select multiple options for their non-monogamous identity, and then were asked to select just one as the identity they *most* identify with. We can see that overall Polyamory was the most commonly selected option, followed closely by ENM/CNM, but this varies if we filter by primary identity.
 
-Select a **Primary Identity** below to see which other relationship styles that specific group also identifies with. For example, see how different the results look for **Open Relationship**. What might this distribution tell us about the community who responded to this survey? 
+Select a **Primary Identity** below to see which other relationship styles that specific group also identifies with.
 
 ```js
 // 1. LOAD DATA
-// We load the CSV. 'typed: true' automatically converts numbers for us.
 const overlapData = await FileAttachment("data/identity_overlap.csv").csv({typed: true});
 ```
 
 <div class="card">
 
-
 ```js
 // 2. CREATE DROPDOWN
-// We extract the unique list of primary identities to populate the menu.
 const primaryOptions = overlapData.map(d => d.primary_identity)
   .filter((v, i, a) => a.indexOf(v) === i) // Remove duplicates
   .sort(); // Sort alphabetically
-// The 'view' function displays the input and exposes the user's choice 
-// as the variable 'selectedPrimary' for the rest of the page to use.
 
 const selectedPrimary = view(Inputs.select(primaryOptions, {
   label: "Select a Primary Identity to filter: ",
-  value: "All Respondents" // The default starting option
+  value: "All Respondents"
 }));
 ```
 
-
 ```js
 // 3. FILTER DATA
-// We create a reactive subset of data that changes whenever 'selectedPrimary' changes.
-// We also filter out the "self-match" (e.g. removing the Polyamory bar 
-// if Polyamory is selected) to keep the chart focused on overlaps.
 const filteredData = overlapData.filter(d => 
   d.primary_identity === selectedPrimary && 
   d.secondary_identity.toLowerCase() !== selectedPrimary.toLowerCase()
@@ -95,30 +246,33 @@ const identities = Array.from(new Set([
 ])).sort();
 ```
 
-
-
 ```js
 Plot.plot({
   width: width,
   height: 500,
-  marginLeft: 200, // Increased to fit "Ethical / Consensual..." label
+  marginLeft: isMobile ? 10 : 200, // On mobile, remove margin (labels go on top)
   marginBottom: 40,
+  style: {
+      fontSize: isMobile ? "12px" : "14px",
+      fontFamily: "Inter, sans-serif"
+  },
   
-
   x: {
-    label: "Percentage of this group",
+    label: "Percentage of this group (%)",
     percent: true,
     grid: true
   },
   y: {
     label: null,
-    tickSize: 0
+    tickSize: 0,
+    tickPadding: 5,
+    axis: isMobile ? null : "left" // HIDE axis on mobile
   },
-    // "Sticky" Colors: Assign a unique color to each identity from a nice palette
+    // "Sticky" Colors
   color: {
     domain: identities,
-    legend: false, // Adds a legend at the top (optional, can remove if cluttered)
-    scheme: "Spectral" // Try "Turbo", "Viridis", or "Tableau10" for different vibes
+    legend: false,
+    scheme: "Spectral"
   },
   marks: [
     Plot.barX(filteredData, {
@@ -126,24 +280,35 @@ Plot.plot({
       y: "secondary_identity",
       fill: "secondary_identity",
       stroke: "#999",
-      sort: {y: "x", reverse: true}, // This one line handles the sorting safely
-      tip: {
-        format: {
-            x: true,
-            y: false,
-            fill: false
-        }
-      }
+      sort: {y: "x", reverse: true},
+      tip: { format: { x: true, y: false, fill: false } }
     }),
+    
+    // DESKTOP: Labels are handled by axis "y" above.
+    
+    // MOBILE: Custom labels placed ABOVE the bars
+    isMobile ? Plot.text(filteredData, {
+        x: 0, // Align to left
+        y: "secondary_identity",
+        text: "secondary_identity",
+        textAnchor: "start",
+        dy: -12, // Move UP above the bar
+        dx: 2,
+        fill: "#333",
+        fontWeight: "bold"
+    }) : null,
+
     Plot.ruleX([0])
   ]
 })
 ```
+
 </div>
 
-<div class="card" style="background: rgba(255, 254, 156, 0.07);">
 
-<h1>Other identities:</h1>
+<div class="card" style="background: rgba(255, 254, 156, 0.15); border-color: rgba(255, 254, 156, 0.3);">
+
+### Other identities:
 
 Participants were also given an opportunity to write in other identities that they use for themselves. Because each answer was different, it is difficult to statistically analyze them, but looking at the answers qualitatively some interesting trends emerged. 
 
@@ -164,9 +329,119 @@ There is a clear intersection between the non-monogamy community and the Ace/Aro
 
 #### "Swolly" / "Swoly"
 Variations of "Swolly" or "Swoly" were used to describe people who practice Swinging/Lifestyle relationships but maintain deep emotional connections with their play partners. It came up in just a few responses but was an interesting distinction to make.
+
 </div>
 
+---
+
+# Stigma and Discrimination
+
+A sobering finding from the survey is the persistence of stigma. **61%** of respondents reported experiencing stigma or discrimination based on their non-monogamous identity in at least one domain (employment, healthcare, family, etc.) over their lifetime.
+
+```js
+const stigmaData = [
+  {type: "Experienced Stigma (Lifetime)", value: 61, fill: "#d32f2f"},
+  {type: "Experienced Stigma (Last 12mo)", value: 40, fill: "#f57c00"},
+  {type: "Fear Judgment", value: 54, fill: "#7b1fa2"}
+];
+```
+
+<div class="card">
+
+### Experiences of Stigma
+
+Despite growing awareness, non-monogamous individuals continue to face significant challenges.
+
+```js
+Plot.plot({
+  width: width,
+  height: 250,
+  // Increase margin significantly for desktop long labels, remove for mobile
+  marginLeft: isMobile ? 10 : 250, 
+  marginRight: 40,
+  x: {
+      label: "Percentage of Respondents (%)", 
+      domain: [0, 80], 
+      grid: true,
+      ticks: 5
+  },
+  y: {
+      label: null,
+      domain: stigmaData.map(d => d.type),
+      axis: isMobile ? null : "left" // HIDE axis on mobile
+  },
+  style: {
+      fontSize: isMobile ? "12px" : "15px",
+      fontFamily: "Inter, sans-serif"
+  },
+  marks: [
+    // Bars
+    Plot.barX(stigmaData, {
+      x: "value",
+      y: "type",
+      fill: "fill",
+      fillOpacity: 0.8,
+      sort: {y: "x", reverse: true},
+      tip: true
+    }),
+    
+    // Value Labels at the end of bars
+    Plot.text(stigmaData, {
+        x: "value", 
+        y: "type", 
+        text: d => `${d.value}%`, 
+        dx: 8, 
+        textAnchor: "start", 
+        fill: "#333",
+        fontWeight: "bold"
+    }),
+
+    // MOBILE LABEL: Top of bar
+    isMobile ? Plot.text(stigmaData, {
+        x: 0, 
+        y: "type",
+        text: "type",
+        textAnchor: "start",
+        dy: -12, // Move UP above the bar
+        dx: 2,
+        fill: "#333",
+        fontWeight: "bold"
+    }) : null,
+
+    Plot.ruleX([0])
+  ]
+})
+```
+
+*Respondents shared personal stories of family disownment, healthcare refusal, and housing discrimination. **54%** often wonder if others judge them for their non-monogamy.*
+
+</div>
+
+---
+
+# A Call for Advocacy
+
+There is broad support within the community for organizing and advocacy. **75%** agree it is important for non-monogamous people to get organized and fight for rights, and **82%** see the non-monogamy movement as part of the broader project for justice and liberation.
+
+<div class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+
+### Join the Movement
+
+OPEN advocates for legislative protections, public awareness, and inclusive policies.
+
+<a href="https://www.open-love.org/join" class="button-link" target="_blank">Get Involved</a>
+
+</div>
+
+
 ----
+
+### Respondent Demographics
+
+As we know from previous research, the non-monogamous population as a whole is diverse. In this study, however, the respondends skewed whiter and younger than global averages.
+
+- **76%** of US respondents identified as White / European descent.
+- The majority (50.6%) were between the ages of **27-39**.
 
 ## Years of Experience:
 
@@ -181,7 +456,6 @@ const experienceData = await FileAttachment("data/experience_data.csv").csv({typ
 
 
 // 2. Create the Slider controls
-// We let the user choose between 0.5 years (6 months) and 5 year chunks.
 const binSize = view(Inputs.range([1, 10], {
   label: "Group by (Years)",
   step: 1,
@@ -194,7 +468,11 @@ const binSize = view(Inputs.range([1, 10], {
 Plot.plot({
   width: width,
   height: 400,
-  marginLeft: 60,
+  marginTop: 20,
+  marginLeft: isMobile ? 50 : 60,
+  style: {
+      fontFamily: "Inter, sans-serif"
+  },
   
   x: {
     label: "Years of Experience",
@@ -206,6 +484,9 @@ Plot.plot({
   y: {
     label: "Number of Respondents",
     grid: true
+  },
+  color: {
+      range: ["#5f4d8d"]
   },
   
   marks: [
@@ -257,8 +538,12 @@ const filteredEntry = entryData.filter(d =>
 // Overall average
 Plot.plot({
   width: width,
-  height: 100,
-  marginLeft: 180, // Space for labels like "Relationship Anarchy"
+  height: 150,
+  marginLeft: isMobile ? 40 : 180, 
+  style: {
+      fontSize: isMobile ? "11px" : "14px",
+      fontFamily: "Inter, sans-serif"
+  },
   
   x: {
     label: "Estimated Age at Entry",
@@ -269,7 +554,6 @@ Plot.plot({
   y: {
     axis: null, // Hide the Y axis numbers (we just care about the shape)
     label: null,
-    // domain: [0, 0.4] // Adjust height overlap manually if needed
   },
 
   marks: [
@@ -279,9 +563,10 @@ Plot.plot({
       {
         x: "entry_age",
         fill: "#5f4d8d",
+        fillOpacity: 0.6,
         curve: "basis", // Smooth the lines (looks nicer than jagged bars)
         thresholds: 40, // Controls how smooth/detailed the curve is
-        stroke: "#333",
+        stroke: "#5f4d8d",
         tip: true // Add tooltips
       }
     )),
@@ -294,6 +579,17 @@ Plot.plot({
         strokeWidth: 2,  // Make it thick enough to see
         strokeOpacity: 0.8
       }
+    )),
+    
+    // Annotate Median Text
+    Plot.text(filteredEntry, Plot.groupZ(
+        {x: "median"},
+        {
+            x: "entry_age",
+            text: d => `Median: ${d3.median(d, d => d.entry_age)}`,
+            dy: -20,
+            fontWeight: "bold"
+        }
     )),
 
     // Add a baseline for each row
@@ -317,7 +613,11 @@ Vertical black lines indicate median estimated starting age.
 Plot.plot({
   width: width,
   height: 800,
-  marginLeft: 180, // Space for labels like "Relationship Anarchy"
+  marginLeft: isMobile ? 120 : 180, // Space for labels like "Relationship Anarchy"
+  style: {
+    fontSize: isMobile ? "11px" : "14px",
+    fontFamily: "Inter, sans-serif"
+  },
   
   x: {
     label: "Estimated Age at Entry",
@@ -328,7 +628,6 @@ Plot.plot({
   y: {
     axis: null, // Hide the Y axis numbers (we just care about the shape)
     label: "",
-    // domain: [0, 0.4] // Adjust height overlap manually if needed
   },
   
   // Define "Sticky" colors again so they match your previous charts
@@ -365,11 +664,9 @@ Plot.plot({
         strokeOpacity: 0.8
       }
     )),
-
-    // Add a baseline for each row
-    // Plot.ruleY([0], {stroke: "white", strokeOpacity: 0.5})
   ]
 })
 ```
 
 </div>
+```

@@ -43,7 +43,7 @@ div.card {
   border-radius: 20px;
   box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05); /* Softer shadow */
   padding: 2.5rem; 
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   max-width: 1200px; /* Constrain max width for readability on large screens */
   margin-left: auto;
   margin-right: auto;
@@ -55,18 +55,19 @@ h1, h2, h3 {
     color: var(--primary-color);
     margin: 0; /* Reset margins */
     padding: 0;
+    max-width: 100%;
 }
 h1 { 
     font-size: 2.5rem; 
     margin-bottom: 2rem; 
-    text-align: center; 
+    text-align: left; 
 }
-h2 { 
-    font-size: 1.8rem; 
-    margin-top: 3rem; 
-    margin-bottom: 1.5rem; 
+.card h2 { 
+    font-size: 1.5rem; 
+    margin-top: 1.5rem; 
+    margin-bottom: 1rem; 
     border-bottom: 2px solid rgba(95, 77, 141, 0.1); 
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.2rem;
     text-align: left; /* Consistent alignment */
 }
 h3 { 
@@ -83,6 +84,9 @@ li {
     margin-bottom: 0.5rem;
 }
 
+body {
+  max-width: 1200px;
+}
 /* Fix "gutter" issue by centering and constraining text width to matching card width container */
 main {
     max-width: 1200px !important;
@@ -132,15 +136,16 @@ p, ul, ol, li {
 
 ```js
 import * as Inputs from "@observablehq/inputs";
-
-// Global Responsive Check
-const isMobile = width < 600;
 ```
 
 
 # 2025 OPEN Community Survey Report
 
-Multiamory was proud to be one of the primary sponsors of the **2025 OPEN Community Survey**. Conducted in partnership with Dr. Amy Moors of Chapman University (IRB #26-13), this year's survey represents the **largest dataset of non-monogamous experiences compiled to date**, with 5,885 respondents from 65 countries.
+<p style="font-size: 1.5rem;">
+Data from the world's largest survey of non-monogamous people to-date!
+</p>
+
+Multiamory was proud to be a primary sponsor of the **2025 OPEN Community Survey** along with Feeld. Conducted in partnership with Dr. Amy Moors of Chapman University (IRB #26-13), this year's survey represents the **largest dataset of non-monogamous experiences compiled to date**, with 5,885 respondents from 65 countries.
 
 This report offers a look into the lives, experiences, and challenges of non-monogamous individuals. Below are some interactive visualizations and key findings.
 
@@ -157,49 +162,57 @@ For the complete analysis, data breakdowns, and detailed methodology, please vis
 
 ```js
 const demographics = [
-  {category: "LGBTQ+", value: 76, fill: "#5f4d8d"},
-  {category: "Heterosexual", value: 24, fill: "#eee"}
+  {group: "Orientation", category: "LGBTQ+", value: 76, fill: "#5f4d8d"},
+  {group: "Orientation", category: "Heterosexual", value: 24, fill: "#eee"},
+  {group: "Gender", category: "Non-Cisgender", value: 29, fill: "#007dd1"},
+  {group: "Gender", category: "Cisgender", value: 71, fill: "#eee"},
 ];
 ```
 
 <div class="card">
 
-### LGBTQ+ Overlap
+# Most Non-Monogamous People Identify as LGBTQ+
 
 Significant overlap continues to exist between non-monogamy and LGBTQ+ identities:
 
 - Only **24%** identified as heterosexual/straight.
-- **71%** identified as cisgender.
+- **29%** identified as something other than cisgender.
 
 ```js
 // 100% Stacked Bar
 Plot.plot({
   width: width,
-  height: 120,
-  style: { fontSize: "14px", fontFamily: "Inter, sans-serif" },
+  height: 200,
+  style: { fontFamily: "Inter, sans-serif" },
   x: { axis: null, domain: [0, 100] },
-  y: { axis: null },
+  y: { 
+    axis: null,
+    domain: ["Orientation", "Gender"],
+    padding: 0.1
+  },
   color: {
-    domain: ["LGBTQ+", "Heterosexual"],
-    range: ["#5f4d8d", "#e0e0e0"]
+    domain: ["LGBTQ+", "Heterosexual", "Non-Cisgender", "Cisgender"],
+    range: ["#5f4d8d", "#e0e0e0", "#007dd1", "#eee"]
   },
   marks: [
     Plot.barX(demographics, Plot.stackX({
       x: "value",
+      y: "group",
       fill: "category",
-      title: d => `${d.category}: ${d.value}%`,
-      inset: 0.5,
+      inset: 0,
       rx: 8 // Rounded corners for modern look
     })),
     // Labels centered on the segments
     Plot.text(demographics, Plot.stackX({
       x: "value",
+      y: "group",
       text: d => `${d.category}\n${d.value}%`,
       z: "category",
-      fill: d => d.category === "LGBTQ+" ? "white" : "#333",
+      fill: d => ["LGBTQ+", "Non-Cisgender"].includes(d.category) ? "white" : "black",
       fontWeight: "bold",
-      fontFamily: "Inter, sans-serif"
-    }))
+      lineHeight: 1.3
+    })),
+    
   ]
 })
 ```
@@ -207,7 +220,7 @@ Plot.plot({
 </div>
 
 
-# Relationship Identity Overlap
+# We Have Multiple Overlapping Identities
 
 How do different non-monogamous identities intersect? 
 Participants were able to select multiple options for their non-monogamous identity, and then were asked to select just one as the identity they *most* identify with. We can see that overall Polyamory was the most commonly selected option, followed closely by ENM/CNM, but this varies if we filter by primary identity.
@@ -250,53 +263,55 @@ const identities = Array.from(new Set([
 Plot.plot({
   width: width,
   height: 500,
-  marginLeft: isMobile ? 10 : 200, // On mobile, remove margin (labels go on top)
-  marginBottom: 40,
+  marginLeft: 4,
+  marginRight: 4,
+  marginTop: 40,
+  marginBottom: 0,
   style: {
-      fontSize: isMobile ? "12px" : "14px",
       fontFamily: "Inter, sans-serif"
   },
   
   x: {
-    label: "Percentage of this group (%)",
+    label: "Percentage of this group",
     percent: true,
-    grid: true
+    grid: true,
+    axis: "top",
+    labelAnchor: "center",
+    labelOffset: 36,
+    ticks: 5
   },
   y: {
     label: null,
+    axis: null,
     tickSize: 0,
     tickPadding: 5,
-    axis: isMobile ? null : "left" // HIDE axis on mobile
+    axis: null
   },
     // "Sticky" Colors
   color: {
     domain: identities,
     legend: false,
-    scheme: "Spectral"
+    scheme: "Rainbow"
   },
   marks: [
     Plot.barX(filteredData, {
       x: "overlap_percentage",
       y: "secondary_identity",
       fill: "secondary_identity",
+      fillOpacity: 0.6,
       stroke: "#999",
       sort: {y: "x", reverse: true},
       tip: { format: { x: true, y: false, fill: false } }
-    }),
-    
-    // DESKTOP: Labels are handled by axis "y" above.
-    
-    // MOBILE: Custom labels placed ABOVE the bars
-    isMobile ? Plot.text(filteredData, {
+    }),    
+    Plot.text(filteredData, {
         x: 0, // Align to left
         y: "secondary_identity",
         text: "secondary_identity",
         textAnchor: "start",
-        dy: -12, // Move UP above the bar
-        dx: 2,
-        fill: "#333",
-        fontWeight: "bold"
-    }) : null,
+        dx: 10,
+        fill: "black",
+        fontWeight: "bold",
+    }),
 
     Plot.ruleX([0])
   ]
@@ -306,43 +321,43 @@ Plot.plot({
 </div>
 
 
-<div class="card" style="background: rgba(255, 254, 156, 0.15); border-color: rgba(255, 254, 156, 0.3);">
+<div class="card" style="background: rgba(199, 156, 255, 0.15); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
 
-### Other identities:
+# Other identities:
 
 Participants were also given an opportunity to write in other identities that they use for themselves. Because each answer was different, it is difficult to statistically analyze them, but looking at the answers qualitatively some interesting trends emerged. 
 
-#### Parallel Polyamory
+## Parallel Polyamory
 While the options included Polyamory, Kitchen Table Polyamory, and Solo Polyamory, several people wrote in a version of "Parallel Polyamory", showing a clear interest in identifying with that way of conducting relationships.
 
-#### Rejecting the "Ethical" label
+## Rejecting the "Ethical" label
 Several respondends specifically mentioned that they don't like using "ethical" as a qualifier for non-monogamy because of the implication that non-monogamy is unethical by default or pointing out the fact that we don't use "ethical" to qualify monogamy so we shouldn't use it with non-monogamy either.
 
-#### Ambiamory
+## Ambiamory
 Additionally, there were several mentions of "Ambiamory," "Flexible," or other identities having to do with being happy and satisfied with either monogamous or non-monogamous relationships. 
 
-#### Mono-Poly
+## Mono-Poly
 Several people wrote that they are in a relationship where one partner practices monogamy while the other doesn't. Most people who wrote this in were the monogamous half of a mono-poly relationship, which makes sense that it is an important part of their identity.
 
-#### Asexual/Aromantic
+## Asexual/Aromantic
 There is a clear intersection between the non-monogamy community and the Ace/Aro community. These responses highlighted the importance of queer platonic relationships, as well as other variations on the romantic/sexual attraction spectrum.
 
-#### "Swolly" / "Swoly"
+## "Swolly" / "Swoly"
 Variations of "Swolly" or "Swoly" were used to describe people who practice Swinging/Lifestyle relationships but maintain deep emotional connections with their play partners. It came up in just a few responses but was an interesting distinction to make.
 
 </div>
 
 ---
 
-# Stigma and Discrimination
+# 61% of respondents reported experiencing stigma 
 
 A sobering finding from the survey is the persistence of stigma. **61%** of respondents reported experiencing stigma or discrimination based on their non-monogamous identity in at least one domain (employment, healthcare, family, etc.) over their lifetime.
 
 ```js
 const stigmaData = [
-  {type: "Experienced Stigma (Lifetime)", value: 61, fill: "#d32f2f"},
-  {type: "Experienced Stigma (Last 12mo)", value: 40, fill: "#f57c00"},
-  {type: "Fear Judgment", value: 54, fill: "#7b1fa2"}
+  {type: "Experienced Stigma (Lifetime)", value: 61, fill: "#e20a0aff"},
+  {type: "Experienced Stigma (Last 12mo)", value: 40, fill: "#00d0f5ff"},
+  {type: "Fear Judgment", value: 54, fill: "#7801ffff"}
 ];
 ```
 
@@ -356,22 +371,24 @@ Despite growing awareness, non-monogamous individuals continue to face significa
 Plot.plot({
   width: width,
   height: 250,
-  // Increase margin significantly for desktop long labels, remove for mobile
-  marginLeft: isMobile ? 10 : 250, 
-  marginRight: 40,
+  marginLeft: 8, 
+  marginRight: 8,
+  marginBottom: 40,
   x: {
       label: "Percentage of Respondents (%)", 
       domain: [0, 80], 
+      labelAnchor: "center",
+      labelOffset: 36,
       grid: true,
-      ticks: 5
+      ticks: 5,
+      fillOpacity: 0.6,
   },
   y: {
       label: null,
       domain: stigmaData.map(d => d.type),
-      axis: isMobile ? null : "left" // HIDE axis on mobile
+      axis: null
   },
   style: {
-      fontSize: isMobile ? "12px" : "15px",
       fontFamily: "Inter, sans-serif"
   },
   marks: [
@@ -380,7 +397,7 @@ Plot.plot({
       x: "value",
       y: "type",
       fill: "fill",
-      fillOpacity: 0.8,
+      fillOpacity: 0.6,
       sort: {y: "x", reverse: true},
       tip: true
     }),
@@ -390,23 +407,21 @@ Plot.plot({
         x: "value", 
         y: "type", 
         text: d => `${d.value}%`, 
-        dx: 8, 
+        x: 63, 
         textAnchor: "start", 
-        fill: "#333",
-        fontWeight: "bold"
+        fill: "black",
+        fontWeight: "bold",
     }),
 
-    // MOBILE LABEL: Top of bar
-    isMobile ? Plot.text(stigmaData, {
+    Plot.text(stigmaData, {
         x: 0, 
         y: "type",
         text: "type",
         textAnchor: "start",
-        dy: -12, // Move UP above the bar
-        dx: 2,
-        fill: "#333",
-        fontWeight: "bold"
-    }) : null,
+        dx: 10,
+        fill: "black",
+        fontWeight: "bold",
+    }),
 
     Plot.ruleX([0])
   ]
@@ -443,10 +458,10 @@ As we know from previous research, the non-monogamous population as a whole is d
 - **76%** of US respondents identified as White / European descent.
 - The majority (50.6%) were between the ages of **27-39**.
 
-## Years of Experience:
+# Some People Have Been Non-Monogamous for Decades
 
 How long had the survey participants been practicing consensual non-monogamy? 
-Adjust the slider to change the detail level. Notice how the shape changes.
+Adjust the slider to change the detail level.
 
 <div class="card">
 
@@ -469,7 +484,9 @@ Plot.plot({
   width: width,
   height: 400,
   marginTop: 20,
-  marginLeft: isMobile ? 50 : 60,
+  marginLeft: 6,
+  marginRight: 6,
+  marginBottom: 40,
   style: {
       fontFamily: "Inter, sans-serif"
   },
@@ -477,6 +494,8 @@ Plot.plot({
   x: {
     label: "Years of Experience",
     grid: true,
+    labelAnchor: "center",
+    labelOffset: 36,
     // Add a little padding at the end so the last bar doesn't get cut off
     domain: [0, 60] 
   },
@@ -513,11 +532,13 @@ Plot.plot({
 
 ---
 
-## Entry Age
+# People Enter Non-Monogamy at All Ages
 
-When did the people in this survey begin their journey into Non-Monogamy? These ages are an approximation and do not account for potential stops and starts that were not gathered in the survey but should provide an interesting glimpse into the average ages that participants begin practicing CNM.
+When did the people in this survey begin their journey into Non-Monogamy? If we look at the total data, we can see that the median starting age is around 29 years old, though many people start a bit earlier in their 20's, and people continue to enter into non-monogamy later in life, contradicting many assumptions that this is only something for young people.
 
-If we look at the total data, we can see that the median starting age is around 29 years old, though many people start a bit earlier in their 20's, and people continue to enter into non-monogamy later in life, contradicting many assumptions that this is only something for young people.
+Note: These ages are an approximation and do not account for potential stops and starts that were not gathered in the survey but should provide an interesting glimpse into the average ages that participants begin practicing CNM.
+
+
 
 <div class="card">
 
@@ -538,16 +559,19 @@ const filteredEntry = entryData.filter(d =>
 // Overall average
 Plot.plot({
   width: width,
-  height: 150,
-  marginLeft: isMobile ? 40 : 180, 
+  height: 120,
+  marginLeft: 20,
+  marginRight: 8, 
+  marginBottom: 40,
   style: {
-      fontSize: isMobile ? "11px" : "14px",
       fontFamily: "Inter, sans-serif"
   },
   
   x: {
     label: "Estimated Age at Entry",
     grid: true,
+    labelAnchor: "center",
+    labelOffset: 36,
     domain: [15, 60] // Focus on the main adult years (optional)
   },
   
@@ -558,38 +582,32 @@ Plot.plot({
 
   marks: [
     Plot.areaY(entryData, Plot.binX(
-      {y: "count"
+      {y: "proportion-facet",
+        filter: null,
       },
       {
         x: "entry_age",
-        fill: "#5f4d8d",
+        fill: "#5825e7ff",
         fillOpacity: 0.6,
         curve: "basis", // Smooth the lines (looks nicer than jagged bars)
         thresholds: 40, // Controls how smooth/detailed the curve is
         stroke: "#5f4d8d",
-        tip: true // Add tooltips
+        tip: false // Add tooltips
       }
     )),
 
     Plot.ruleX(filteredEntry, Plot.groupZ(
-      {x: "median"}, // Calculate the median of 'x' for each group
+      {
+        x: "median",
+        title: d => `Median Age: ${d3.median(d, d => d.entry_age)}` 
+      },
       {
         x: "entry_age",
         stroke: "black", // Make the line black
         strokeWidth: 2,  // Make it thick enough to see
-        strokeOpacity: 0.8
+        strokeOpacity: 0.8,
+        tip: { format: { x: false, fy: false } }
       }
-    )),
-    
-    // Annotate Median Text
-    Plot.text(filteredEntry, Plot.groupZ(
-        {x: "median"},
-        {
-            x: "entry_age",
-            text: d => `Median: ${d3.median(d, d => d.entry_age)}`,
-            dy: -20,
-            fontWeight: "bold"
-        }
     )),
 
     // Add a baseline for each row
@@ -600,6 +618,7 @@ Plot.plot({
 
 </div>
 
+# Who Enters Non-Monogamy First?
 
 It is also interesting to look at the distribution of entry ages by their current primary non-monogamy identity. This does not necessarily mean they started their non-monogamy journey with the same identity but it shows some interesting things like how Relationship Anarchy has the youngest median starting point, and Lifestyle/Swinger has the oldest, with the others falling in between.
 
@@ -612,58 +631,94 @@ Vertical black lines indicate median estimated starting age.
 // 2. The Ridgeline Plot
 Plot.plot({
   width: width,
-  height: 800,
-  marginLeft: isMobile ? 120 : 180, // Space for labels like "Relationship Anarchy"
+  height: 900,
+  marginLeft: 20,
+  marginRight: 8,
+  marginBottom: 40,
   style: {
-    fontSize: isMobile ? "11px" : "14px",
     fontFamily: "Inter, sans-serif"
   },
   
   x: {
     label: "Estimated Age at Entry",
     grid: true,
-    domain: [15, 60] // Focus on the main adult years (optional)
+    labelAnchor: "center",
+    labelOffset: 36,
+    domain: [15, 60],
+    grid: true
   },
   
   y: {
     axis: null, // Hide the Y axis numbers (we just care about the shape)
-    label: "",
+    label: null,
+  },
+
+  fy: {
+    axis: null,
+    label: null,
+    padding: 0.05,
   },
   
   // Define "Sticky" colors again so they match your previous charts
   color: {
     legend: false,
-    scheme: "Spectral" 
+    scheme: "Rainbow" 
   },
 
   marks: [
+    Plot.axisX({ 
+      anchor: "top", 
+      label: null // Optional: hide the label if you don't want it repeated
+    }),
+    Plot.axisX({ 
+      anchor: "bottom", 
+      label: "Age of Entry", // Optional: hide the label if you don't want it repeated
+      labelAnchor: "center",
+    }),
     Plot.areaY(filteredEntry, Plot.binX(
       {y: "proportion-facet",
         filter: null,
-        label: null
-      }, // 'prop' calculates density instead of raw count
+      },
       {
         x: "entry_age",
-        fill: "identity", // Color by identity
-        // THE RIDGELINE MAGIC:
-        fy: "identity", // Split into rows by identity
-        curve: "basis", // Smooth the lines (looks nicer than jagged bars)
-        thresholds: 40, // Controls how smooth/detailed the curve is
+        fill: "identity",
+        fillOpacity: 0.6,
+        fy: "identity",
+        curve: "basis",
+        thresholds: 40,
         stroke: "#666",
-        tip: false // Add tooltips
+        tip: false 
       }
     )),
 
     Plot.ruleX(filteredEntry, Plot.groupZ(
-      {x: "median"}, // Calculate the median of 'x' for each group
+      {
+        x: "median",
+        title: (values) => `Median Age: ${d3.median(values)}` 
+      },
       {
         x: "entry_age",
-        fy: "identity", // Make sure we calculate it per row
-        stroke: "black", // Make the line black
-        strokeWidth: 2,  // Make it thick enough to see
-        strokeOpacity: 0.8
+        // We must map 'title' to data so the reducer above receives the ages
+        title: "entry_age", 
+        fy: "identity",
+        stroke: "black",
+        strokeWidth: 2,
+        strokeOpacity: 0.8,
+        
+        // 3. Enable the tip, and hide the raw 'x' number so only our Title shows
+        tip: { format: { x: false, fy: false } }
       }
     )),
+    Plot.text(filteredEntry, Plot.selectFirst({
+        fy: "identity",
+        text: "identity",
+        frameAnchor: "right",
+        textAnchor: "end",
+        dx: -10,
+        dy: -6,
+        fill: "black",
+        fontWeight: "bold",
+    }))
   ]
 })
 ```

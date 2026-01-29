@@ -547,6 +547,18 @@ const entryData = await FileAttachment("data/entry_age_data.csv").csv({typed: tr
 const filteredEntry = entryData.filter(d => 
   d.identity !== null
 );
+
+// 2. Calculate median age for each identity and sort
+const mediansByIdentity = d3.rollup(
+  filteredEntry,
+  v => d3.median(v, d => d.entry_age),
+  d => d.identity
+);
+
+const sortedIdentities = Array.from(mediansByIdentity.entries())
+  .sort((a, b) => a[1] - b[1]) // Sort by median (ascending)
+  .map(d => d[0]); // Extract just the identity names
+
 ```
 
 
@@ -653,6 +665,7 @@ Plot.plot({
     axis: null,
     label: null,
     padding: 0.05,
+    domain: sortedIdentities
   },
   
   // Define "Sticky" colors again so they match your previous charts

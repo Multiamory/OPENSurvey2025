@@ -461,7 +461,7 @@ As we know from previous research, the non-monogamous population as a whole is d
 # Some People Have Been Non-Monogamous for Decades
 
 How long had the survey participants been practicing consensual non-monogamy? 
-Adjust the slider to change the detail level.
+
 
 <div class="card">
 
@@ -470,12 +470,8 @@ Adjust the slider to change the detail level.
 const experienceData = await FileAttachment("data/experience_data.csv").csv({typed: true});
 
 
-// 2. Create the Slider controls
-const binSize = view(Inputs.range([1, 10], {
-  label: "Group by (Years)",
-  step: 1,
-  value: 1 // Default to 1-year buckets
-}));
+// 2. Fixed bin size
+const binSize = 1;
 ```
 
 ```js
@@ -724,4 +720,15 @@ Plot.plot({
 ```
 
 </div>
+
+<div class="card" style="text-align: center;">
+
+### Read the Full Report
+
+For the complete analysis, data breakdowns, and detailed methodology, please visit the official report on the OPEN website.
+
+<a href="https://www.open-love.org/blog/2025-community-survey-report" class="button-link" target="_blank">View Main Report</a>
+
+</div>
+
 ```
